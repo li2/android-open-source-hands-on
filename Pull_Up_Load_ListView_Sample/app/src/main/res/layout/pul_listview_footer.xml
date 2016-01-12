@@ -1,0 +1,42 @@
+<FrameLayout android:id="@+id/pulListViewFooter"
+             xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/pulListViewFooter_loading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <ProgressBar
+            android:id="@+id/pulListViewFooter_loadingInfiniteProgress"
+            style="?android:progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:indeterminate="true"/>
+
+        <TextView
+            android:id="@+id/pulListViewFooter_loadingLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Loading..."/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/pulListViewFooter_notLoading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/pulListViewFooter_notLoadingLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+</FrameLayout>

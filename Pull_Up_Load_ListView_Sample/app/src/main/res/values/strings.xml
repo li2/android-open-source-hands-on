@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Pull Up Load ListView</string>
+    <string name="refresh">Refresh</string>
+    <string name="loading_countries">Loading countries&#8230;</string>
+</resources>
