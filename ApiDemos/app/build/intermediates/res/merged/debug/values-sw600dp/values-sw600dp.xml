@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- From: file:/Users/weiyi/Develop/AndroidApp/OpenSourceDemo/ApiDemos/app/src/main/res/values-sw600dp/layout.xml -->
-    <eat-comment/>
-    <item name="resources_layout_reference" type="layout">
-            @layout/resources_layout_reference_tablet</item>
-</resources>

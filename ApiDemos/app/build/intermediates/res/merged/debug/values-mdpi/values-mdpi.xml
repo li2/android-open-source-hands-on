@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- From: file:/Users/weiyi/Develop/AndroidApp/OpenSourceDemo/ApiDemos/app/src/main/res/values-mdpi/strings.xml -->
-    <eat-comment/>
-    <string name="density_title">Density: Medium</string>
-</resources>
