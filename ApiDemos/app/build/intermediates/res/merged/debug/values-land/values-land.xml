@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/Users/weiyi/Develop/AndroidApp/OpenSourceDemo/ApiDemos/app/src/main/res/values-land/integers.xml -->
+    <eat-comment/>
+    <integer name="system_ui_modes_cols">3</integer>
+</resources>

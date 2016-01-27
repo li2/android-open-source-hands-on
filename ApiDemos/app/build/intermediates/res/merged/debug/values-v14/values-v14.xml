@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/Users/weiyi/Develop/AndroidApp/OpenSourceDemo/ApiDemos/app/src/main/res/values-v14/bools.xml -->
+    <eat-comment/>
+    <bool name="atLeastIceCreamSandwich">true</bool>
+    <!-- From: file:/Users/weiyi/Develop/AndroidApp/OpenSourceDemo/ApiDemos/app/src/main/res/values-v14/styles.xml -->
+    <eat-comment/>
+    <style name="ThemeDefault" parent="@android:style/Theme.DeviceDefault"/>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/switch_cam"
+          android:title="@string/switch_cam" />
+</menu>
+<!-- From: file:/Users/weiyi/Develop/AndroidApp/OpenSourceDemo/ApiDemos/app/src/main/res/menu/camera_menu.xml -->

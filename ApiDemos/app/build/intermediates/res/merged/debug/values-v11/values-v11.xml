@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/Users/weiyi/Develop/AndroidApp/OpenSourceDemo/ApiDemos/app/src/main/res/values-v11/bools.xml -->
+    <eat-comment/>
+    <bool name="atLeastHoneycomb">true</bool>
+    <!-- From: file:/Users/weiyi/Develop/AndroidApp/OpenSourceDemo/ApiDemos/app/src/main/res/values-v11/styles.xml -->
+    <eat-comment/>
+    <style name="ThemeCurrent" parent="@android:Theme.Holo"/>
+    <style name="ThemeCurrentDialog" parent="@android:Theme.Holo.Dialog"/>
+    <style name="ThemeDefault" parent="@android:style/Theme.Holo"/>
+    <style name="ThemeDialogWhenLarge" parent="@android:style/Theme.Holo.DialogWhenLarge"/>
+</resources>

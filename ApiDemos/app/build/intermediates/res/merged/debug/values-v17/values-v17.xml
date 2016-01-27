@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/Users/weiyi/Develop/AndroidApp/OpenSourceDemo/ApiDemos/app/src/main/res/values-v17/bools.xml -->
+    <eat-comment/>
+    <bool name="atLeastJellyBeanMR1">true</bool>
+</resources>
