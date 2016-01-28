@@ -1,6 +1,10 @@
 # 从 Android Sample ApiDemos 中学习 android.animation API 的用法
 
-http://li2.me/2016/01/android-sdk-sample-api-demos-for-animation.html
+
+ApiDemos 可以从 SDK 中获取，之所以上传到 Github，是因为从 sdk sample 导入到 Android Studio
+    花费了好大的功夫。所以想保存起来，备用。
+如果你想了解详细的过程，可以[点击这里查看](http://li2.me/2016/01/android-sdk-sample-api-demos-for-animation.html
+)。
 
 
 ## 关于Android SDK Sample: ApiDemos
@@ -14,24 +18,16 @@ http://li2.me/2016/01/android-sdk-sample-api-demos-for-animation.html
 其中有一段话是这样的：
 
 > But for a more detailed view of how things work, check out the **API Demos in the SDK for the new animations**. There are many small applications written for the new Animations category (at the top of the list of demos in the application, right before the word App. I like working on animation because it usually comes first in the alphabet).
-
+>
 > SDK samples 包含了一个例子 ApiDemos，这个例子详尽地展示了如何使用 3.0 SDK API。其中一部分 demos 正是关于**新的动画机制（android.animation）**。而和 animation 相关的 demos 排在整个列表的最前面，比 App demos 还靠前，这就是我为什么喜欢研究 animation 的原因。
 
 （这个点可真奇特（简（可）单（爱）），不知道这些牛人在想什么，哈哈）
 
-
-
-## 从SDK sample 中获取 ApiDemos
-
 虽然是11年2月发布的，而现在已经是2016年的1月底了，虽然步子慢了五年，但3.x的动画依然没有过时，所以官方提供的 Sample 有什么理由不去学习呢？（除此之外，你认为有什么捷径吗？） （感觉像是发现了一直忽视的宝藏 ╰(￣▽￣)╮）
 
-那么接下来，就把它导入 studio，需要特别说明的是 ApiDemos 位于新的 SDK sample 的 legacy 目录中，位于旧的sdk sample 根目录中：
 
-```sh
-$HOME/Library/Android/sdk/samples/android-21/legacy/ApiDemos
-$HOME/Library/Android/sdk/samples/android-15/ApiDemos
-```
-ApiDemos 和动画有关的是（ApiDemos 全部列表见文章最后）：
+## ApiDemos 和动画有关的示例
+（ApiDemos 全部列表见文章最后）
 
 ```sh
 $ tree -L 2
@@ -78,66 +74,6 @@ $ tree -L 2
     ├── LayoutAnimation7.java
 ```
 
-
-## 导入 ApiDemos 到 Android Studio
-
-通过 Android Studio 导入 ApiDemos 时遇到了如下几个问题：
-
-> Plugin is too old, please update to a more recent version, or set ANDROID_DAILY_OVERRIDE environment variable to ...
-
-做了如下修改（**参照可以正常运行的 Android Studio 项目**）：
-(1) 修改文件 `gradle-wrapper.properties` 中的 `distributionUrl=https\://services.gradle.org/distributions/gradle-2.4-all.zip`;（之前是2.8）
-(2) 修改文件 `build.gradle (Project: your_app_name)` 中的 `dependencies: classpath 'com.android.tools.build:gradle:1.3.0`；（之前是2.0.0-alpha3）
-[点击这里查看详细的解释](http://stackoverflow.com/a/34532399/2722270)
-
-
-> Error:Execution failed for task ':app:mergeDebugResources'.
-> ApiDemos/app/src/main/res/xml/preference_switch: Error: The file name must end with .xml
-
-看来官方 sample 也会出现一些低级错误，重命名这个文件加上后缀，可以解决问题。
-
-
-> ApiDemos/app/src/main/java/com/example/android/apis/os/MmsMessagingDemo.java
-> Error:(19, 30) error: package com.google.android.mms does not exist
-
-我的解决办法很粗暴，直接删掉 os 目录，同时要删掉在 manifest 中声明的对应组件。
-
-
-> ApiDemos/app/src/main/java/com/example/android/apis/app/PrintBitmap.java
-> Error:(23, 32) error: package android.support.v4.print does not exist
-
-需要导入 support-v4。针对 Studio 2.0 preview4 的导入方法：
-File >> Project Structure... >> Modules >> Dependencies >> +1 Library dependency
-
-
-> Error:Execution failed for task ':app:processDebugManifest'.
-> Manifest merger failed : uses-sdk:minSdkVersion 1 cannot be smaller than version 4 declared in library [com.android.support:support-v4:23.1.1] /Users/weiyi/Develop/AndroidApp/OpenSourceDemo/ApiDemos/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/AndroidManifest.xml
-  	Suggestion: use tools:overrideLibrary="android.support.v4" to force usage
-
-解决办法是在 `build.gradle (Module)` 中增加 `mindSdkVersion`：
-
-```xml
-    defaultConfig {
-        minSdkVersion 21
-    }
-```
-因为我是从android-21中导入的ApiDemos，所以项目中有些地方使用了5.0的API，所以把min设置为21。
-
-
-> Error:(65, 40) error: cannot find symbol method sqrt(float)
-
-`FloatMath.sqrt(0.125f)` 等方法已经从 6.0 SDK 中移除了：All methods were removed from the public API in version 23.
-修改 `compileSdkVersion` 为22（原来是23），同时修改 support-v4 的版本号为 22.2.1
-
-------
-
-经过这几步修改后，终于可以在 Android Strudio 上编译然后运行在 5.1 的系统上。
-浪费了一天的时间 :(
-写这篇文档又花了大半天 :)
-
-所以，你如果想学习 ApiDemos，可以按照上述步骤自己从 SDK sample 中导入。如果想避免这些修改过程，可以clone我已经改好的：
-[Learning_Android_Open_Source/ApiDemos](https://github.com/li2/Learning_Android_Open_Source/tree/master/ApiDemos
-)
 
 ## 附录：ApiDemos 部分动画截图
 
