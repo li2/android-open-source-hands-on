@@ -18,23 +18,23 @@ package com.example.android.apis.view;
 
 // Need the following import to get access to the app resources, since this
 // class is in a sub-package.
-import com.example.android.apis.R;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.example.android.apis.R;
+
 public class Animation3 extends Activity implements AdapterView.OnItemSelectedListener {
     private static final String[] INTERPOLATORS = {
             "Accelerate", "Decelerate", "Accelerate/Decelerate",
             "Anticipate", "Overshoot", "Anticipate/Overshoot",
-            "Bounce"
+            "Bounce", "CycleInterpolator"
     };
 
     @Override
@@ -91,6 +91,9 @@ public class Animation3 extends Activity implements AdapterView.OnItemSelectedLi
                 a.setInterpolator(AnimationUtils.loadInterpolator(this,
                         android.R.anim.bounce_interpolator));
                 break;
+            case 7:
+                a.setInterpolator(AnimationUtils.loadInterpolator(this,
+                        android.R.anim.cycle_interpolator));
         }
 
         target.startAnimation(a);
