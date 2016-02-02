@@ -1430,6 +1430,15 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".animation.ViewPropertyAnimator"
+                  android:label="Animation/View Property Animations"
+                  android:enabled="@bool/atLeastHoneycomb">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.SAMPLE_CODE" />
+            </intent-filter>
+        </activity>
+
         <!-- ************************************* -->
         <!--     ANIMATION PACKAGE SAMPLES         -->
         <!-- ************************************* -->
