@@ -9,6 +9,7 @@ import android.widget.ImageView;
 public class AnimatedVector extends AppCompatActivity {
 
     private ImageView mAddRemoveImage;
+    private CheckableFab mCheckableFab;
 
     private AnimatedVectorDrawable mAddToRemoveDrawable;
     private AnimatedVectorDrawable mRemoveToAddDrawable;
@@ -34,5 +35,13 @@ public class AnimatedVector extends AppCompatActivity {
 
         mAddToRemoveDrawable = (AnimatedVectorDrawable) getDrawable(R.drawable.avd_add_to_remove);
         mRemoveToAddDrawable = (AnimatedVectorDrawable) getDrawable(R.drawable.avd_remove_to_add);
+
+        mCheckableFab = (CheckableFab) findViewById(R.id.checkable_fab);
+        mCheckableFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCheckableFab.setChecked(!mCheckableFab.isChecked());
+            }
+        });
     }
 }
