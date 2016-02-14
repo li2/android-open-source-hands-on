@@ -8,4 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="fab_menu_label_style">
+        <item name="android:background">@drawable/fab_menu_label_background</item>
+        <item name="android:textColor">@color/fab_menu_label_text</item>
+    </style>
+
 </resources>

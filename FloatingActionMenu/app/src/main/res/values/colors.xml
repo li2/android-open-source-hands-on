@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">@color/blue</color>
+    <color name="colorPrimaryDark">@color/blue_pressed</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="white">#fafafa</color>
+    <color name="white_pressed">#f1f1f1</color>
+    <color name="black">#212121</color>
+    <color name="black_semi_transparent">#B2000000</color>
+    <color name="blue">#1379D6</color>
+    <color name="blue_pressed">#0665ba</color>
+
+
+    <color name="fab_add_normal">@color/blue</color>
+    <color name="fab_add_pressed">@color/blue_pressed</color>
+
+    <color name="fab_menu_button_normal">@color/white</color>
+    <color name="fab_menu_button_pressed">@color/white_pressed</color>
+    <color name="fab_menu_label_text">@color/black</color>
+    <color name="fab_menu_label_background">@color/white</color>
 </resources>
