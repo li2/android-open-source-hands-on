@@ -8,10 +8,7 @@ import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-
-import java.util.Random;
 
 public class AnimatedVector extends AppCompatActivity {
 
@@ -20,12 +17,8 @@ public class AnimatedVector extends AppCompatActivity {
     private AnimatedVectorDrawable mRemoveToAddDrawable;
     private boolean mIsAddState;
 
-
     private static final int ANSWER_HIDE_DELAY = 500;
     private CheckableFab mCheckableFab;
-    private Button mResetFab;
-    private Runnable mHideFabRunnable;
-    private Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,26 +45,19 @@ public class AnimatedVector extends AppCompatActivity {
         mCheckableFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Random random = new Random();
-                boolean answerCorrect = (random.nextInt() % 2 == 0);
-                adjustFab(answerCorrect);
+                adjustFab(mAnswerIsRight);
+                mAnswerIsRight = !mAnswerIsRight;
             }
         });
-        resetFab();
 
-        mResetFab = (Button) findViewById(R.id.reset_fab);
-        mResetFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                resetFab();
-            }
-        });
+        resetFab();
     }
+
+    private boolean mAnswerIsRight = false;
 
     private void resetFab() {
         mCheckableFab.show();
-        final int backgroundColor = ContextCompat.getColor(AnimatedVector.this,
-                android.R.color.holo_blue_dark);
+        final int backgroundColor = ContextCompat.getColor(AnimatedVector.this, R.color.white);
         mCheckableFab.setChecked(true);
         mCheckableFab.setBackgroundTintList(ColorStateList.valueOf(backgroundColor));
     }
@@ -83,12 +69,23 @@ public class AnimatedVector extends AppCompatActivity {
 
         mCheckableFab.setChecked(answerCorrect);
         mCheckableFab.setBackgroundTintList(ColorStateList.valueOf(backgroundColor));
-        mHideFabRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mCheckableFab.hide();
-            }
-        };
         mHandler.postDelayed(mHideFabRunnable, ANSWER_HIDE_DELAY);
     }
+
+    private Handler mHandler = new Handler();
+
+    private Runnable mHideFabRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mCheckableFab.hide();
+            mHandler.postDelayed(mResetFabRunnable, ANSWER_HIDE_DELAY);
+        }
+    };
+
+    private Runnable mResetFabRunnable = new Runnable() {
+        @Override
+        public void run() {
+            resetFab();
+        }
+    };
 }
