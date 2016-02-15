@@ -6,6 +6,7 @@
 
     <color name="white">#fafafa</color>
     <color name="white_pressed">#f1f1f1</color>
+    <color name="white_semi_transparent">#ccfafafa</color>
     <color name="black">#212121</color>
     <color name="black_semi_transparent">#B2000000</color>
     <color name="blue">#1379D6</color>
