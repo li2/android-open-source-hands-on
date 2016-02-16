@@ -51,11 +51,19 @@
         </activity>
 
         <activity android:name=".CardFlipActivity"
-            android:label="@string/title_card_flip"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/DarkTheme">
+                  android:label="@string/title_card_flip"
+                  android:parentActivityName=".MainActivity"
+                  android:theme="@style/DarkTheme">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                       android:value=".MainActivity" />
+        </activity>
+
+        <activity android:name=".CardFlip2Activity"
+                  android:label="@string/title_card_flip2"
+                  android:parentActivityName=".MainActivity"
+                  android:theme="@style/DarkTheme">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                       android:value=".MainActivity" />
         </activity>
 
         <activity android:name=".ScreenSlideActivity"
