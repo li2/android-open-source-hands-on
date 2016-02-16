@@ -28,6 +28,8 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.ToxicBakery.viewpager.transforms.DepthPageTransformer;
+
 /**
  * Demonstrates a "screen-slide" animation using a {@link ViewPager}. Because {@link ViewPager}
  * automatically plays such an animation when calling {@link ViewPager#setCurrentItem(int)}, there
@@ -75,6 +77,9 @@ public class ScreenSlideActivity extends FragmentActivity {
                 invalidateOptionsMenu();
             }
         });
+        // 覆盖 View page 切换时的默认动画，通过第三方 library 实现，包含多种切换动画：
+        // https://github.com/ToxicBakery/ViewPagerTransforms
+        mPager.setPageTransformer(false, new DepthPageTransformer());
     }
 
     @Override
