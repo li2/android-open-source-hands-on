@@ -27,11 +27,13 @@ import android.widget.ListView;
 /**
  * The launchpad activity for this sample project. This activity launches other activities that
  * demonstrate implementations of common animations.
+ * 首页的 activity 由一个 listView 构建，用来启动其它 activities，各演示了一种常见的动画。
  */
 public class MainActivity extends ListActivity {
     /**
      * This class describes an individual sample (the sample title, and the activity class that
      * demonstrates this sample).
+     * 定义私有内部类（包含例子标题、演示例子的 activity 类名），是为了方便构建 listView 的 ArrayAdapter.
      */
     private class Sample {
         private CharSequence title;
@@ -42,6 +44,12 @@ public class MainActivity extends ListActivity {
             this.title = getResources().getString(titleResId);
         }
 
+        /*
+        默认的 ArrayAdapter<T>.getView 方法依赖 T 的 toString 方法。
+        默认的 toString() 方法等价于 getClass().getName() + '@' + Integer.toHexString(hashCode()) ，
+        返回了混和对象类名和内存地址的字符串信息。
+        覆写 toString 方法以获得更易读的字符串信息。
+        */
         @Override
         public String toString() {
             return title.toString();
@@ -57,6 +65,7 @@ public class MainActivity extends ListActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // MainActivity 的布局只包含一个 ListView。
         setContentView(R.layout.activity_main);
 
         // Instantiate the list of samples.
@@ -68,6 +77,10 @@ public class MainActivity extends ListActivity {
                 new Sample(R.string.title_layout_changes, LayoutChangesActivity.class),
         };
 
+        /*
+        为ListView 创建默认的 ArrayAdapter.
+        android.R.layout.simple_list_item_1 是 Android SDK 提供的列表项的布局资源，包含一个 TextView。
+        */
         setListAdapter(new ArrayAdapter<Sample>(this,
                 android.R.layout.simple_list_item_1,
                 android.R.id.text1,
