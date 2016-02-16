@@ -28,7 +28,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 /**
  * Demonstrates a "card-flip" animation using custom fragment transactions ({@link
@@ -108,6 +107,7 @@ public class CardFlipActivity extends Activity
 
     private void flipCard() {
         if (mShowingBack) {
+            // 执行相反的 transaction.
             getFragmentManager().popBackStack();
             return;
         }
@@ -126,6 +126,8 @@ public class CardFlipActivity extends Activity
                 // rotations when switching to the back of the card, as well as animator
                 // resources representing rotations when flipping back to the front (e.g. when
                 // the system Back button is pressed).
+                // 设置 transaction （以及从回退栈弹出时）开始和结束时的动画。
+                // R.animator 中定义的这些动画有些复杂，而且效果上有瑕疵。 TODO
                 .setCustomAnimations(
                         R.animator.card_flip_right_in, R.animator.card_flip_right_out,
                         R.animator.card_flip_left_in, R.animator.card_flip_left_out)
@@ -137,6 +139,8 @@ public class CardFlipActivity extends Activity
 
                 // Add this transaction to the back stack, allowing users to press Back
                 // to get to the front of the card.
+                // 保存 transaction 到 fragment manager 的回退栈中，
+                // 当用户按 Back 键，或者调用 popBackStack() 时，就能够执行相反的 transaction.
                 .addToBackStack(null)
 
                 // Commit the transaction.
