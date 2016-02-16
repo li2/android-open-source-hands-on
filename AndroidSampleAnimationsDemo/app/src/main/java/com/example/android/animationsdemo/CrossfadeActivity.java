@@ -34,6 +34,10 @@ import android.view.View;
  * applications, this toggle would occur as soon as content was available. Note that if content is
  * immediately available, a loading spinner shouldn't be presented and there should be no
  * animation.</p>
+ *
+ * 这个例子演示了两个重叠视图之间的淡入淡出动画（cross-fading between two overlapping views）。
+ * 两个视图是 loading indicator view 和 text content view。
+ * 要注意的是，如果加载内容的时间很短，就没必要显示 loading indicator view.
  */
 public class CrossfadeActivity extends Activity {
     /**
@@ -70,7 +74,8 @@ public class CrossfadeActivity extends Activity {
         mContentView.setVisibility(View.GONE);
 
         // Retrieve and cache the system's default "short" animation time.
-        mShortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        // 使用 SDK 定义的时间参数。
+        mShortAnimationDuration = getResources().getInteger(android.R.integer.config_longAnimTime);
     }
 
     @Override
@@ -101,11 +106,19 @@ public class CrossfadeActivity extends Activity {
 
     /**
      * Cross-fades between {@link #mContentView} and {@link #mLoadingView}.
+     * 利用 ViewPropertyAnimator 对 View 的 alpha 属性做动画，
+     * 这个例子非常适合在加载网络、数据库等耗时内容时秀出一个加载进度条。
+     *
+     * 《Android ViewPropertyAnimator 介绍（3.1的动画机制）》
+     * https://segmentfault.com/a/1190000004411201
      */
     private void showContentOrLoadingIndicator(boolean contentLoaded) {
         // Decide which view to hide and which to show.
         final View showView = contentLoaded ? mContentView : mLoadingView;
         final View hideView = contentLoaded ? mLoadingView : mContentView;
+
+        //  a value from 0 to 1, where 0 means the view is completely transparent and
+        // 1 means the view is completely opaque.
 
         // Set the "show" view to 0% opacity but visible, so that it is visible
         // (but fully transparent) during the animation.
