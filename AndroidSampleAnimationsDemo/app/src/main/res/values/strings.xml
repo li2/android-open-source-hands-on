@@ -25,7 +25,7 @@
     <string name="title_zoom">Zoom</string>
     <string name="title_layout_changes">Layout Changes</string>
     <string name="title_template_step">Step <xliff:g id="step_number">%1$d</xliff:g>: Lorem
-        Ipsum</string>
+        Ipsum by WeiYi.Li ;-)</string>
 
     <!-- Actions -->
     <string name="action_toggle">Toggle indicator</string>

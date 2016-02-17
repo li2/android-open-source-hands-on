@@ -72,6 +72,21 @@ public class ScreenSlidePageFragment extends Fragment {
         ((TextView) rootView.findViewById(android.R.id.text1)).setText(
                 getString(R.string.title_template_step, mPageNumber + 1));
 
+        int page = mPageNumber%5;
+        int drawableId;
+        if (page == 0) {
+            drawableId = R.drawable.background0;
+        } else if (page == 1) {
+            drawableId = R.drawable.background1;
+        } else if (page == 2) {
+            drawableId = R.drawable.background2;
+        } else  if (page == 3) {
+            drawableId = R.drawable.background3;
+        } else {
+            drawableId = R.drawable.background4;
+        }
+        (rootView.findViewById(R.id.pagerBackground)).setBackgroundResource(drawableId);
+
         return rootView;
     }
 
