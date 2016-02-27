@@ -1,18 +1,19 @@
 apply plugin: 'com.android.application'
 
 android {
-  compileSdkVersion Integer.parseInt(ANDROID_BUILD_COMPILE_SDK_VERSION)
+  compileSdkVersion 23
   buildToolsVersion ANDROID_BUILD_TOOLS_VERSION
 
   defaultConfig {
     minSdkVersion 14
-    targetSdkVersion Integer.parseInt(ANDROID_BUILD_TARGET_SDK_VERSION)
+    targetSdkVersion 23
     versionCode Integer.parseInt(VERSION_CODE)
     versionName VERSION_NAME
   }
 }
 
 dependencies {
-  compile 'com.android.support:appcompat-v7:22.0.0'
+  compile 'com.android.support:appcompat-v7:23.1.1'
+  compile 'com.android.support:preference-v14:23.1.0'
   compile project(':library')
 }
