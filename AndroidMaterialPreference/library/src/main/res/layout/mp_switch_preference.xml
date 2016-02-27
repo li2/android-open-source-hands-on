@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.SwitchCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.SwitchCompat
     android:id="@+id/switch_compat"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@null"
-    android:focusable="false"
     android:clickable="false"
+    android:focusable="false"
     />

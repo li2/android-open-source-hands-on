@@ -6,26 +6,28 @@ import android.support.v7.app.ActionBarActivity;
 
 /**
  * Simple Activity to display example preferences.
- *
+ * <p/>
  * Created by jenzz on 28/01/15.
  */
 public class SettingsActivity extends ActionBarActivity {
 
-  @Override protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-    if (savedInstanceState == null) {
-      getFragmentManager().beginTransaction()
-          .add(android.R.id.content, new SettingsFragment())
-          .commit();
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .add(android.R.id.content, new SettingsFragment())
+                    .commit();
+        }
     }
-  }
 
-  public static class SettingsFragment extends PreferenceFragment {
+    public static class SettingsFragment extends PreferenceFragment {
 
-    @Override public void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
-      addPreferencesFromResource(R.xml.prefs);
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.prefs);
+        }
     }
-  }
 }
