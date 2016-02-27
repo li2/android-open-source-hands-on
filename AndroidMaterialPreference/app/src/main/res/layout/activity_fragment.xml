@@ -1,0 +1,9 @@
+<!-- Create fragment container layout
+Note that, while the file consists solely of a container view for a single fragment,
+an activity’s layout can be more complex and define multiple container views as well as widgets of its own
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragmentContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    />
