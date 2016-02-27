@@ -1,6 +1,7 @@
 package me.li2.androidmaterialpreference;
 
-import android.support.v4.app.Fragment;
+
+import android.app.Fragment;
 
 public class SettingsActivity extends SingleFragmentActivity {
 

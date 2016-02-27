@@ -1,5 +1,6 @@
 <PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
         android:title="inline_preferences">
@@ -8,6 +9,13 @@
             android:key="checkbox_preference"
             android:title="title_checkbox_preference"
             android:summary="summary_checkbox_preference" />
+
+        <SwitchPreference
+            app:shouldDisableView="true"
+            android:key="switch_preference"
+            android:title="title_switch_preference"
+            android:summaryOn="summary_switch_on"
+            android:summaryOff="summary_switch_off"/>
 
     </PreferenceCategory>
 

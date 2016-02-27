@@ -1,8 +1,8 @@
 package me.li2.androidmaterialpreference;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 public abstract class SingleFragmentActivity extends AppCompatActivity {
@@ -19,7 +19,7 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
         setContentView(getLayoutResId());
         
         // Get the FragmentManager.
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         // Ask the FragmentManager for the fragment with a container view ID, 
         // If this fragment is already in the list, the FragmentManager will return it,
         Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
