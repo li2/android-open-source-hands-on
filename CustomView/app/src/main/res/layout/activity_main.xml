@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:layout_weight="100"
-        custom:showText="true"
+        custom:showText2="true"
         custom:labelHeight="20dp"
         custom:labelWidth="110dp"
         custom:labelY="85dp"
