@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,6 +40,8 @@ import android.view.ViewGroup;
  */
 public class CardFlipActivity extends Activity
         implements FragmentManager.OnBackStackChangedListener {
+    private static final String TAG = "CardFlipActivity";
+
     /**
      * A handler object, used for deferring UI operations.
      */
@@ -92,9 +95,15 @@ public class CardFlipActivity extends Activity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                Log.d(TAG, "Navigate to home");
                 // Navigate "up" the demo structure to the launchpad activity.
                 // See http://developer.android.com/design/patterns/navigation.html for more.
-                NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
+                if (mShowingBack) {
+                    // 执行相反的 transaction.
+                    getFragmentManager().popBackStack();
+                } else {
+                    NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
+                }
                 return true;
 
             case R.id.action_flip:
@@ -159,6 +168,7 @@ public class CardFlipActivity extends Activity
 
     @Override
     public void onBackStackChanged() {
+        Log.d(TAG, "onBackStackChanged " + getFragmentManager().getBackStackEntryCount());
         mShowingBack = (getFragmentManager().getBackStackEntryCount() > 0);
 
         // When the back stack changes, invalidate the options menu (action bar).
