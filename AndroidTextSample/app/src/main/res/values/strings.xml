@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">AndroidTextSample</string>
+    <string name="action_title_spannable_string_api">SpannableString API</string>
+</resources>
