@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -87,14 +88,19 @@ public class SpannableStringApiActivity extends AppCompatActivity {
         // Image text
         mImageTextView.getViewTreeObserver()
                 .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Deprecated
                     @Override
                     public void onGlobalLayout() {
                         int height = mImageTextView.getHeight();
                         SpannableStringBuilder ssb =
                                 addImageToText(SpannableStringApiActivity.this, R.drawable.ic_time, CONTENT, height);
                         mImageTextView.setText(ssb);
-                        //
-                        mImageTextView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        // must remove listener
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                            mImageTextView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        } else {
+                            mImageTextView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                        }
                     }
                 });
     }
