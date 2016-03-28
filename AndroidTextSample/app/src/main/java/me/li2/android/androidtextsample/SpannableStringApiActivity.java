@@ -1,9 +1,11 @@
 package me.li2.android.androidtextsample;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,17 +13,20 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.CharacterStyle;
+import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
-import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -44,6 +49,7 @@ public class SpannableStringApiActivity extends AppCompatActivity {
     private static final String CONTENT = "time is 52h 1314m, go.";
     private static final int START = 8; // the index of 5
     private static final int END = 17; // the index of ,
+    private static final String URL = "http://li2.me";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,8 +88,7 @@ public class SpannableStringApiActivity extends AppCompatActivity {
         setSpanText(mRelativeSizeTextView, relativeSizeSpan);
 
         // Url text
-        URLSpan urlSpan = new URLSpan("http://li2.me");
-        setSpanText(mUrlTextView, urlSpan);
+        setUrlSpanText(mUrlTextView, URL);
 
         // Image text
         mImageTextView.getViewTreeObserver()
@@ -120,5 +125,21 @@ public class SpannableStringApiActivity extends AppCompatActivity {
         ssb.setSpan(new ImageSpan(drawable), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         return ssb;
+    }
+
+    private void setUrlSpanText(TextView textView, final String url) {
+        SpannableStringBuilder ssb = new SpannableStringBuilder(CONTENT);
+        ssb.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                Toast.makeText(SpannableStringApiActivity.this, url, Toast.LENGTH_LONG).show();
+                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(i);
+            }
+        }, START, END, 0);
+        textView.setText(ssb);
+        // setting the MovementMethod on the TextView that contains the span,
+        // otherwise onClick will not be called.
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 }
