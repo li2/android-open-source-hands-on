@@ -1,4 +1,4 @@
-[Android SpannableString Example](http://li2.me/2016/03/android-how-to-use-spannable-to-format-string.html)
+[Android SpannableString Example](http://li2.me/2016/03/android-spannablestring-example.html)
 
 为了格式化字符串，可以使用 [SpannableStringBuilder](http://developer.android.com/reference/android/text/SpannableStringBuilder.html)。
 SpannableStringBuilder 有一个方法 `setSpan (Object what, int start, int end, int flags)`，可以把由 start 和 end 指定的部分字符串替换成给定的对象，给定的对象可以是：
