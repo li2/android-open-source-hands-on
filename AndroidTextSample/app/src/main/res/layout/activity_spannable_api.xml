@@ -57,6 +57,18 @@
             android:layout_height="wrap_content"/>
 
         <TextView
+            android:id="@+id/spannableSuperscript"
+            android:textSize="@dimen/text_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/spannableSubscript"
+            android:textSize="@dimen/text_size"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"/>
+
+        <TextView
             android:id="@+id/spannableUrl"
             android:textSize="@dimen/text_size"
             android:layout_width="match_parent"

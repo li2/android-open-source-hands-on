@@ -22,11 +22,15 @@ import android.text.style.ImageSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
+import android.text.style.SubscriptSpan;
+import android.text.style.SuperscriptSpan;
 import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -43,6 +47,8 @@ public class SpannableStringApiActivity extends AppCompatActivity {
     @Bind(R.id.spannableStrikethrough) TextView mStrikethroughTextView;
     @Bind(R.id.spannableStyle) TextView mStyleTextView;
     @Bind(R.id.spannableRelativeSize) TextView mRelativeSizeTextView;
+    @Bind(R.id.spannableSuperscript) TextView mSuperscriptTextview;
+    @Bind(R.id.spannableSubscript) TextView mSubscriptTextview;
     @Bind(R.id.spannableUrl) TextView mUrlTextView;
     @Bind(R.id.spannableImage) TextView mImageTextView;
 
@@ -84,8 +90,17 @@ public class SpannableStringApiActivity extends AppCompatActivity {
         setSpanText(mStyleTextView, styleSpan);
 
         // Relative size text
-        RelativeSizeSpan relativeSizeSpan = new RelativeSizeSpan(1.2f);
-        setSpanText(mRelativeSizeTextView, relativeSizeSpan);
+        RelativeSizeSpan relativeLargerSizeSpan = new RelativeSizeSpan(1.5f);
+        RelativeSizeSpan relativeSmallerSizeSpan = new RelativeSizeSpan(0.5f);
+        setSpanText(mRelativeSizeTextView, relativeLargerSizeSpan);
+
+        // Superscript text
+        SuperscriptSpan superscriptSpan = new SuperscriptSpan();
+        setSpanText(mSuperscriptTextview, superscriptSpan, relativeSmallerSizeSpan);
+
+        // Subscript text
+        SubscriptSpan subscriptSpan = new SubscriptSpan();
+        setSpanText(mSubscriptTextview, subscriptSpan, relativeSmallerSizeSpan);
 
         // Url text
         setUrlSpanText(mUrlTextView, URL);
@@ -113,6 +128,21 @@ public class SpannableStringApiActivity extends AppCompatActivity {
     private void setSpanText(TextView textView, CharacterStyle span) {
         SpannableStringBuilder ssb = new SpannableStringBuilder(CONTENT);
         ssb.setSpan(span, START, END, 0);
+        textView.setText(ssb);
+    }
+
+    private void setSpanText(TextView textView, CharacterStyle span1, CharacterStyle span2) {
+        SpannableStringBuilder ssb = new SpannableStringBuilder(CONTENT);
+        ssb.setSpan(span1, START, END, 0);
+        ssb.setSpan(span2, START, END, 0);
+        textView.setText(ssb);
+    }
+
+    private void setSpanText(TextView textView, List<CharacterStyle> spans) {
+        SpannableStringBuilder ssb = new SpannableStringBuilder(CONTENT);
+        for (CharacterStyle span : spans) {
+            ssb.setSpan(span, START, END, 0);
+        }
         textView.setText(ssb);
     }
 
