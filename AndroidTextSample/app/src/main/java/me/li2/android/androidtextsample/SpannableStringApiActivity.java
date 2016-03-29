@@ -30,8 +30,6 @@ import android.view.ViewTreeObserver;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -52,9 +50,9 @@ public class SpannableStringApiActivity extends AppCompatActivity {
     @Bind(R.id.spannableUrl) TextView mUrlTextView;
     @Bind(R.id.spannableImage) TextView mImageTextView;
 
-    private static final String CONTENT = "time is 52h 1314m, go.";
+    private static final String CONTENT = "time is 52h 1314m . ";
     private static final int START = 8; // the index of 5
-    private static final int END = 17; // the index of ,
+    private static final int END = 17; // the index of m
     private static final String URL = "http://li2.me";
 
     @Override
@@ -65,45 +63,43 @@ public class SpannableStringApiActivity extends AppCompatActivity {
         setTitle(R.string.action_title_spannable_string_api);
 
         // plain text
-        mTextView.setText(CONTENT);
-
-        SpannableStringBuilder ssb = new SpannableStringBuilder(CONTENT);
+        mTextView.setText(CONTENT + "Plain");
 
         // foreground color text
         ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.YELLOW);
-        setSpanText(mForegroundColorTextView, foregroundColorSpan);
+        setSpanText(CONTENT + "Colored", mForegroundColorTextView, foregroundColorSpan);
 
         // background color text
         BackgroundColorSpan backgroundColorSpan = new BackgroundColorSpan(Color.YELLOW);
-        setSpanText(mBackgroundColorTextView, backgroundColorSpan);
+        setSpanText(CONTENT + "Highlighted", mBackgroundColorTextView, backgroundColorSpan);
 
         // under line text
         UnderlineSpan underlineSpan = new UnderlineSpan();
-        setSpanText(mUnderlineTextView, underlineSpan);
+        setSpanText(CONTENT + "Underlined", mUnderlineTextView, underlineSpan);
 
         // strikethrough text
         StrikethroughSpan strikethroughSpan = new StrikethroughSpan();
-        setSpanText(mStrikethroughTextView, strikethroughSpan);
+        setSpanText(CONTENT + "Strikethrough", mStrikethroughTextView, strikethroughSpan);
 
         // Style text
         StyleSpan styleSpan = new StyleSpan(Typeface.BOLD_ITALIC);
-        setSpanText(mStyleTextView, styleSpan);
+        setSpanText(CONTENT + "Bold & Italic", mStyleTextView, styleSpan);
 
         // Relative size text
         RelativeSizeSpan relativeLargerSizeSpan = new RelativeSizeSpan(1.5f);
         RelativeSizeSpan relativeSmallerSizeSpan = new RelativeSizeSpan(0.5f);
-        setSpanText(mRelativeSizeTextView, relativeLargerSizeSpan);
+        setSpanText(CONTENT + "Large", mRelativeSizeTextView, relativeLargerSizeSpan);
 
         // Superscript text
         SuperscriptSpan superscriptSpan = new SuperscriptSpan();
-        setSpanText(mSuperscriptTextview, superscriptSpan, relativeSmallerSizeSpan);
+        setSpanText(CONTENT + "Superscript & Small", mSuperscriptTextview, superscriptSpan, relativeSmallerSizeSpan);
 
         // Subscript text
         SubscriptSpan subscriptSpan = new SubscriptSpan();
-        setSpanText(mSubscriptTextview, subscriptSpan, relativeSmallerSizeSpan);
+        setSpanText(CONTENT + "Subscript & Small", mSubscriptTextview, subscriptSpan, relativeSmallerSizeSpan);
 
         // Url text
-        setUrlSpanText(mUrlTextView, URL);
+        setUrlSpanText(CONTENT + "URL&Clickable", mUrlTextView, URL);
 
         // Image text
         mImageTextView.getViewTreeObserver()
@@ -113,7 +109,7 @@ public class SpannableStringApiActivity extends AppCompatActivity {
                     public void onGlobalLayout() {
                         int height = mImageTextView.getHeight();
                         SpannableStringBuilder ssb =
-                                addImageToText(SpannableStringApiActivity.this, R.drawable.ic_time, CONTENT, height);
+                                addImageToText(SpannableStringApiActivity.this, R.drawable.ic_time, CONTENT + "Image", height);
                         mImageTextView.setText(ssb);
                         // must remove listener
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -125,24 +121,16 @@ public class SpannableStringApiActivity extends AppCompatActivity {
                 });
     }
 
-    private void setSpanText(TextView textView, CharacterStyle span) {
-        SpannableStringBuilder ssb = new SpannableStringBuilder(CONTENT);
+    private void setSpanText(String content, TextView textView, CharacterStyle span) {
+        SpannableStringBuilder ssb = new SpannableStringBuilder(content);
         ssb.setSpan(span, START, END, 0);
         textView.setText(ssb);
     }
 
-    private void setSpanText(TextView textView, CharacterStyle span1, CharacterStyle span2) {
-        SpannableStringBuilder ssb = new SpannableStringBuilder(CONTENT);
+    private void setSpanText(String content, TextView textView, CharacterStyle span1, CharacterStyle span2) {
+        SpannableStringBuilder ssb = new SpannableStringBuilder(content);
         ssb.setSpan(span1, START, END, 0);
         ssb.setSpan(span2, START, END, 0);
-        textView.setText(ssb);
-    }
-
-    private void setSpanText(TextView textView, List<CharacterStyle> spans) {
-        SpannableStringBuilder ssb = new SpannableStringBuilder(CONTENT);
-        for (CharacterStyle span : spans) {
-            ssb.setSpan(span, START, END, 0);
-        }
         textView.setText(ssb);
     }
 
@@ -157,8 +145,8 @@ public class SpannableStringApiActivity extends AppCompatActivity {
         return ssb;
     }
 
-    private void setUrlSpanText(TextView textView, final String url) {
-        SpannableStringBuilder ssb = new SpannableStringBuilder(CONTENT);
+    private void setUrlSpanText(String content, TextView textView, final String url) {
+        SpannableStringBuilder ssb = new SpannableStringBuilder(content);
         ssb.setSpan(new ClickableSpan() {
             @Override
             public void onClick(View widget) {
@@ -168,6 +156,7 @@ public class SpannableStringApiActivity extends AppCompatActivity {
             }
         }, START, END, 0);
         textView.setText(ssb);
+
         // setting the MovementMethod on the TextView that contains the span,
         // otherwise onClick will not be called.
         textView.setMovementMethod(LinkMovementMethod.getInstance());
