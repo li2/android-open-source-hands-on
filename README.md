@@ -72,6 +72,20 @@ PullUpLoadListView
 
 
 
+TextDeom
+------------
+
+2016-03-28
+
+[Android SpannableString Example](http://li2.me/2016/03/android-spannablestring-example.html)
+
+为了格式化字符串，可以使用 [SpannableStringBuilder](http://developer.android.com/reference/android/text/SpannableStringBuilder.html)。
+
+![android-spannable-string-api](https://github.com/li2/Learning_Android_Open_Source/blob/master/TextDemo/android-spannable-string-api.png)
+
+
+
+
 About
 ------------
 

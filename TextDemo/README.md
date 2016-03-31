@@ -17,4 +17,4 @@ SpannableStringBuilder 有一个方法 `setSpan (Object what, int start, int end
 
 效果如下图：
 
-![android-spannable-string-api](https://github.com/li2/Learning_Android_Open_Source/blob/master/AndroidTextSample/android-spannable-string-api.png)
+![android-spannable-string-api](https://github.com/li2/Learning_Android_Open_Source/blob/master/TextDemo/android-spannable-string-api.png)
