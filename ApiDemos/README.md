@@ -1,30 +1,7 @@
-# 从 Android Sample ApiDemos 中学习 android.animation API 的用法
+ApiDemos 可以从 SDK 中获取，之所以上传到 Github，是因为从 sdk sample 导入到 Android Studio 花费了好大的功夫。所以需要保存备用。
 
-
-ApiDemos 可以从 SDK 中获取，之所以上传到 Github，是因为从 sdk sample 导入到 Android Studio
-    花费了好大的功夫。所以想保存起来，备用。
-如果你想了解详细的过程，可以[点击这里查看](http://li2.me/2016/01/android-sdk-sample-api-demos-for-animation.html
+[如果你想了解详细的过程，可以点击这里查看](http://li2.me/2016/01/android-sdk-sample-api-demos-for-animation.html
 )。
-
-
-## 关于Android SDK Sample: ApiDemos
-
-> 背景： HONEYCOMB 3.0 （[about versions android-3.0 highlights](http://developer.android.com/about/versions/android-3.0-highlights.html)） 发布于 2011.02，引入了New animation framework；3.1 发布于 2011.05.
->
-> 在 [Android 开发者网站](http://developer.android.com/)  搜索『animation』，通过『blog』过滤搜索结果，其中一篇文章 [2011-02-24 Animation in Honeycomb](http://android-developers.blogspot.com/2011/02/animation-in-honeycomb.html) 排在搜索结果第2位，可见其重要程度，作者是 Chet Haase，一个致力于图形和动画研究的 Android 开发者，可以从他的 [个人博客graphics-geek.blogspot.com](http://graphics-geek.blogspot.com)  阅读更多相关主题的博文。
-
-『Animation in Honeycomb』讨论了一个问题，已经有了能实现 move, scale, rotate, and fade 这些视图动画的 `android.view.animation` ，**为什么还要在 3.0 引入新 APIs `android.animation`？ 新 APIs 带来了哪些新特性？** 然后进一步展示了这些新特性的强大便利之处。
-
-其中有一段话是这样的：
-
-> But for a more detailed view of how things work, check out the **API Demos in the SDK for the new animations**. There are many small applications written for the new Animations category (at the top of the list of demos in the application, right before the word App. I like working on animation because it usually comes first in the alphabet).
->
-> SDK samples 包含了一个例子 ApiDemos，这个例子详尽地展示了如何使用 3.0 SDK API。其中一部分 demos 正是关于**新的动画机制（android.animation）**。而和 animation 相关的 demos 排在整个列表的最前面，比 App demos 还靠前，这就是我为什么喜欢研究 animation 的原因。
-
-（这个点可真奇特（简（可）单（爱）），不知道这些牛人在想什么，哈哈）
-
-虽然是11年2月发布的，而现在已经是2016年的1月底了，虽然步子慢了五年，但3.x的动画依然没有过时，所以官方提供的 Sample 有什么理由不去学习呢？（除此之外，你认为有什么捷径吗？） （感觉像是发现了一直忽视的宝藏 ╰(￣▽￣)╮）
-
 
 ## ApiDemos 和动画有关的示例
 （ApiDemos 全部列表见文章最后）
@@ -73,12 +50,6 @@ $ tree -L 2
     ├── LayoutAnimation6.java
     ├── LayoutAnimation7.java
 ```
-
-
-## 附录：ApiDemos 部分动画截图
-
-![apidemos-animation-list](/assets/img/android/apidemos-animation.gif)
-![apidemos-animation-list](/assets/img/android/apidemos-animation.png)
 
 
 ## 附录：ApiDemos 包含的全部示例

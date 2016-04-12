@@ -43,9 +43,7 @@ ApiDemos
 
 2016-01-27
 
-从 Android Sample ApiDemos 中学习 android.animation API 的用法。
-
-ApiDemos 是 3.0 SDK sample 包含的一个例子，这个例子展示了如何使用 3.0 SDK API。其中一部分 demos 正是关于**新的动画机制（android.animation）**。
+ApiDemos 是 3.0 SDK sample 包含的一个例子，这个例子展示了如何使用 3.0 SDK API。（其中一部分演示了新的动画机制的用法（android.animation））
 
 需要特别说明的是，ApiDemos 位于新的 SDK sample 的 legacy 目录中，位于旧的sdk sample 根目录中：
 
@@ -57,8 +55,8 @@ ApiDemos 可以从 SDK 中获取，之所以上传到 Github，是因为从 sdk 
 
 如果你想了解详细的过程，可以点击这里查看：
 
-- http://li2.me/2016/01/how-to-learn-android-animation.html
-- http://li2.me/2016/01/android-sdk-sample-api-demos-for-animation.html
+- [如何学习Android Animation？](http://li2.me/2016/01/how-to-learn-android-animation.html)
+- [从 Android Sample ApiDemos 中学习 android.animation API 的用法。](http://li2.me/2016/01/android-sdk-sample-api-demos-for-animation.html)
 
 
 
@@ -77,7 +75,7 @@ PullUpLoadListView
 
 2016-01-12
 
-学习「Android ListView上拉加载更多」开源库nicolasjafelle/PagingListView，在此基础上实现PullUpLoadListView，与原实现有两个主要区别。http://li2.me/2016/01/android-pull-up-load-listview-sample.html
+[pull up load ListView.gif](http://li2.me/assets/img/android/android-pull-up-load-listview.gif)
 
 
 
@@ -98,10 +96,6 @@ TextDeom
 About
 ------------
 
-by weiyi.li
-
-[li2.me](http://li2.me)
-
-<weiyi.just2@gmail.com>
-
-2016-01-12
+- weiyi.li
+- [li2.me](http://li2.me)
+- <weiyi.just2@gmail.com>
