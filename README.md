@@ -19,7 +19,6 @@ Github 上已经有各种高质量的「集锦」，它们的工作是按某种�
 ├── FloatingActionMenu
 ├── MaterialPreference
 ├── PullUpLoadListView
-├── README.md
 └── TextDemo
 ```
 
@@ -60,6 +59,16 @@ ApiDemos 可以从 SDK 中获取，之所以上传到 Github，是因为从 sdk 
 
 - http://li2.me/2016/01/how-to-learn-android-animation.html
 - http://li2.me/2016/01/android-sdk-sample-api-demos-for-animation.html
+
+
+
+FloatingActionMenu
+------------
+
+2016-02-14
+
+开源项目 [futuresimple/android-floating-action-button](https://github.com/futuresimple/android-floating-action-button) 实现了浮动按钮菜单，即：点击FAB就会弹出菜单。
+![floating action button menu](https://github.com/li2/Learning_Android_Open_Source/blob/master/FloatingActionMenu/floating_action_button_menu.png)
 
 
 
