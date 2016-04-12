@@ -23,6 +23,14 @@ Github 上已经有各种高质量的「集锦」，它们的工作是按某种�
 ```
 
 
+AnimatedVector
+------------
+
+2016-02-07
+
+![checkable fab.gif](https://cloud.githubusercontent.com/assets/6058601/13045489/9315ae70-d40e-11e5-9ecd-2a74768f02ab.gif)
+
+
 AnimationsDemo
 ------------
 
