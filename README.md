@@ -75,7 +75,7 @@ PullUpLoadListView
 
 2016-01-12
 
-[pull up load ListView.gif](http://li2.me/assets/img/android/android-pull-up-load-listview.gif)
+![pull up load ListView.gif](http://li2.me/assets/img/android/android-pull-up-load-listview.gif)
 
 
 
@@ -92,10 +92,9 @@ TextDeom
 
 
 
-
 About
 ------------
 
 - weiyi.li
-- [li2.me](http://li2.me)
+- [我的个人博客 li2.me](http://li2.me)
 - <weiyi.just2@gmail.com>
