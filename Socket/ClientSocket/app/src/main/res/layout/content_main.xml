@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     android:id="@+id/content_main"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -14,12 +15,59 @@
     tools:context="me.li2.android.clientsocket.MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <GridLayout
+        android:id="@+id/serverInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:useDefaultMargins="true"
+        android:alignmentMode="alignBounds"
+        android:columnOrderPreserved="false"
+        android:columnCount="4"
+        >
+        <TextView
+            android:layout_gravity="right"
+            android:text="Server IP:"
+            />
+        <!-- NOTE21: use for entering an IP address -->
+        <EditText
+            android:id="@+id/serverIpEditText"
+            android:inputType="numberDecimal"
+            android:digits="0123456789."
+            android:ems="10"
+            android:text="192.168.0.0"
+            />
+        <TextView
+            android:layout_column="0"
+            android:layout_gravity="right"
+            android:text="Server Port:"
+            />
+        <!-- NOTE21: use for entering an integer -->
+        <EditText
+            android:id="@+id/serverPortEditText"
+            android:inputType="number"
+            android:ems="10"
+            android:text="3000"
+            />
+        <Button
+            android:id="@+id/connectBtn"
+            android:layout_row="2"
+            android:layout_column="0"
+            android:text="Connect"
+            />
+        <Button
+            android:id="@+id/sendBtn"
+            android:layout_column="3"
+            android:text="Send"
+            />
+
+    </GridLayout>
+
+    <!-- NOTE21: use the remaining space -->
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/background_light">
 
         <TextView
             android:id="@+id/messageText"
@@ -29,4 +77,4 @@
 
     </ScrollView>
 
-</RelativeLayout>
+</LinearLayout>
