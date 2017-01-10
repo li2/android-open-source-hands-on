@@ -30,20 +30,33 @@ public class NetworkConnection {
     private static final int SERVER_PORT = 8080;
 
     private Context mContext;
+    private Handler mUIHandler;
     private Socket mClientSocket;
     private DataInputStream mDataInputStream;
     private DataOutputStream mDataOutputStream;
     private Thread mConnectionThread;
     private Handler mSendHandler;
+    private boolean mIsConnected;
+    private ConnectionListener mConnectionListener;
 
-    public NetworkConnection(Context context) {
+    public interface ConnectionListener {
+        void onConnected(final boolean isConnected);
+        void onDataReceived(final String data);
+        void onDataSent(final boolean succeeded);
+    }
+
+    public NetworkConnection(Context context, final ConnectionListener listener) {
         mContext = context;
+        mConnectionListener = listener;
 
         // init send thread handler
         HandlerThread sendHandlerThread;
         sendHandlerThread = new HandlerThread("SendHandlerThread");
         sendHandlerThread.start();
         mSendHandler = new Handler(sendHandlerThread.getLooper());
+
+        // UI handler
+        mUIHandler = new Handler(mContext.getMainLooper());
     }
 
     /**
@@ -52,11 +65,20 @@ public class NetworkConnection {
      * @param serverPort the server port
      */
     public void connect(final String serverIp, final int serverPort) {
+        if (!isNetworkAvailable()) {
+            notifyConnected(false);
+            return;
+        }
+
         if (mConnectionThread == null) {
             mConnectionThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    openSocket(serverIp, serverPort);
+                    if (!openSocket(serverIp, serverPort)) {
+                        notifyConnected(false);
+                        return;
+                    }
+                    notifyConnected(true);
                     mConnectionThread = null;
                 }
             });
@@ -81,10 +103,16 @@ public class NetworkConnection {
             @Override
             public void run() {
                 closeSocket();
+                notifyConnected(false);
                 mConnectionThread = null;
             }
         });
         mConnectionThread.setName("NetworkDisconnectThread");
+        mConnectionThread.start();
+    }
+
+    public boolean isConnected() {
+        return mIsConnected;
     }
 
     private boolean openSocket(String serverIp, int serverPort) {
@@ -166,6 +194,19 @@ public class NetworkConnection {
                     mDataOutputStream.flush();
                 } catch (IOException e) {
                     e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void notifyConnected(final boolean isConnected) {
+        mIsConnected = isConnected;
+        // make callback run on UI thread
+        mUIHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mConnectionListener != null) {
+                    mConnectionListener.onConnected(isConnected);
                 }
             }
         });

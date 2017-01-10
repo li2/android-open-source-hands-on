@@ -1,9 +1,13 @@
 package me.li2.android.clientsocket;
 
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -22,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.messageText) TextView mMessageView;
     @BindView(R.id.serverIpEditText) EditText mIpEditText;
     @BindView(R.id.serverPortEditText) EditText mPortEditText;
+    @BindView(R.id.connectStatusView) View mConnectStatusView;
+    @BindView(R.id.connectBtn) Button mConnectButton;
 
     private NetworkConnection mConnection;
 
@@ -32,7 +38,11 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ButterKnife.bind(this);
-        mConnection = new NetworkConnection(this);
+        // Create connection
+        mConnection = new NetworkConnection(this, mConnectionListener);
+        // 如果不在onCreate的时候初始化控件（调用下面的方法），那么此后更新控件无效。
+        // 不知道这算不算 ButterKnife 的 bug.
+        updateConnectStatusView(mConnection.isConnected());
     }
 
     @Override
@@ -46,14 +56,20 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.connectBtn)
     void connectToServer() {
-        String ip = mIpEditText.getText().toString();
-        int port = Integer.valueOf(mPortEditText.getText().toString());
-        mConnection.connect(ip, port);
+        if (!mConnection.isConnected()) {
+            String ip = mIpEditText.getText().toString();
+            int port = Integer.valueOf(mPortEditText.getText().toString());
+            mConnection.connect(ip, port);
+        } else {
+            mConnection.disconnect();
+        }
     }
 
     @OnClick(R.id.sendBtn)
     void sendToServer() {
-        mConnection.sendPacket(HELLO_WORLD);
+        if (mConnection.isConnected()) {
+            mConnection.sendPacket(HELLO_WORLD);
+        }
     }
 
     /**
@@ -68,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
      * 因为 Client 端每次 new Socket，都建立了一个新的 socket session，
      * 而Server 端并没有实现 socket session 线程池，mDataInputStream 是旧的 socket session，也就无法继续读到数据。
      */
-
+    @SuppressWarnings("unused")
     private void send(String packet) {
         try {
             Log.d(TAG, "client socket");
@@ -82,4 +98,31 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "Failed to open socket, exception: " + e);
         }
     }
+
+    void updateConnectStatusView(boolean isConnected) {
+        GradientDrawable bgShape = (GradientDrawable)mConnectStatusView.getBackground();
+        int colorResId = isConnected ? android.R.color.holo_green_dark : android.R.color.holo_red_dark;
+        bgShape.setColor(ContextCompat.getColor(this, colorResId));
+
+        mConnectButton.setText(isConnected ? "Disconnect" : "Connect");
+    }
+
+    private NetworkConnection.ConnectionListener mConnectionListener =
+            new NetworkConnection.ConnectionListener() {
+        @Override
+        public void onConnected(boolean isConnected) {
+            Log.d(TAG, "onConnected " + isConnected);
+            updateConnectStatusView(isConnected);
+        }
+
+        @Override
+        public void onDataReceived(String data) {
+
+        }
+
+        @Override
+        public void onDataSent(boolean succeeded) {
+
+        }
+    };
 }
