@@ -4,9 +4,13 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Server
 {
+    private static final int LISTEN_PORT = 3000;
+    private ArrayList<Socket> mSocketSessionList;
+    
     public static void main(String[] args) {
       Server server = new Server();
       server.addShutdownHook();
@@ -16,7 +20,7 @@ public class Server
         @Override
         public void run()
         {
-          server.openSocket(3000);
+          server.openSocket(LISTEN_PORT);
           server.startReceiveThread();;
         }
       });
@@ -36,10 +40,11 @@ public class Server
     private void openSocket(int port)
     {
       try {
-        System.out.println("Server is running and listening ...");
         mServerSocket = new ServerSocket(port);
         mSocket = mServerSocket.accept();
         mDataInputStream = new DataInputStream(mSocket.getInputStream());
+        System.out.println("Server is running and listening ...");
+        System.out.println("ip: " + mServerSocket.getInetAddress() + ":" + LISTEN_PORT);
       } catch (IOException e) {
         e.printStackTrace();
       }

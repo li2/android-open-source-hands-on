@@ -9,13 +9,18 @@ An Android App which implements the client-side socket.
 
 A Java Project which implements the server-side socket.
 
+To run the Server:
+
 ```sh
-$ pwd
-.../Learning_Android_Open_Source/Socket/ServerSocket/src
+$ ./runServer.sh
+```
 
-$ javac me/li2/Server.java ; java me/li2/Server
+When Server is running,
+
+```sh
 Server is running and listening ...
-Received from client: Hello World, I'm an Android Client-Side Socket
+ip: 0.0.0.0/0.0.0.0:3000
 
-^CShouting down, close socket.
+Received from client: Hello World, I'm an Android Client-Side Socket
+Received from client: Hello World, I'm an Android Client-Side Socket
 ```
