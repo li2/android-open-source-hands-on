@@ -73,6 +73,7 @@ public class Server
      */
     class ClientSocketHandler implements Runnable
     {
+      private boolean mIsConnected; 
       private Socket mSocket;
       private DataInputStream mDataInputStream;
       private String mClientIp;
@@ -81,6 +82,7 @@ public class Server
       {
         super();
         assert (socket != null);
+        mIsConnected = true;
         mSocket = socket;
         mClientIp = mSocket.getRemoteSocketAddress().toString();
         
@@ -95,13 +97,39 @@ public class Server
       @Override
       public void run()
       {
-        while (true) {
+        while (mIsConnected) {
           try {
             System.out.println("Receiving from client " + mClientIp + ":  " + mDataInputStream.readUTF());
           } catch (IOException e) {
-            System.out.println("Error reading packet");
-            e.printStackTrace();
+            // we have to close stream and socket when disconnect.
+            // and the right way to detect disconnect is the IOException.
+            // refer to http://stackoverflow.com/a/10241044/2722270
+            System.out.println("Error reading packet, close socket");
+            disconnect();
           }
+        }
+        System.out.println(mClientIp + " disconnect");
+      }
+      
+      private void disconnect()
+      {
+        mIsConnected = false;
+        try {
+          if (mDataInputStream != null) {
+            mDataInputStream.close();
+            mDataInputStream = null;
+          }
+        } catch (IOException e) {
+          System.out.println("Error closing InputStream");
+        }
+        
+        try {
+          if (mSocket != null) {
+            mSocket.close();
+            mSocket = null;
+          }
+        } catch (IOException e) {
+          System.out.println("Error closing Socket");
         }
       }
     }
