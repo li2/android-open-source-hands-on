@@ -35,6 +35,15 @@ public class MainActivity extends AppCompatActivity {
         mConnection = new NetworkConnection(this);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mConnection != null)
+        {
+            mConnection.disconnect();
+        }
+    }
+
     @OnClick(R.id.connectBtn)
     void connectToServer() {
         String ip = mIpEditText.getText().toString();
