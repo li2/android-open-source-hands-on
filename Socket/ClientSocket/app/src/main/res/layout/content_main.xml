@@ -68,6 +68,12 @@
             android:layout_column="3"
             android:text="Send"
             />
+        <EditText
+            android:id="@+id/sendEditText"
+            android:ems="52"
+            android:hint="data to be send"
+            android:layout_columnSpan="4"
+            android:layout_row="3"/>
 
     </GridLayout>
 
@@ -76,13 +82,14 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@android:color/background_light">
+        android:background="@android:color/black">
 
         <TextView
-            android:id="@+id/messageText"
+            android:id="@+id/logText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textSize="18sp"/>
+            android:textColor="@android:color/white"
+            android:textSize="12sp"/>
 
     </ScrollView>
 

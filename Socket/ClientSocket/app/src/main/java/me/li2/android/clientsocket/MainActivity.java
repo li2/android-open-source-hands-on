@@ -14,6 +14,9 @@ import android.widget.TextView;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,9 +26,10 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "ClientSocket";
     private static final String HELLO_WORLD = "Hello World, I'm an Android Client-Side Socket";
 
-    @BindView(R.id.messageText) TextView mMessageView;
+    @BindView(R.id.logText) TextView mLogView;
     @BindView(R.id.serverIpEditText) EditText mIpEditText;
     @BindView(R.id.serverPortEditText) EditText mPortEditText;
+    @BindView(R.id.sendEditText) EditText mSendEditText;
     @BindView(R.id.connectStatusView) View mConnectStatusView;
     @BindView(R.id.connectBtn) Button mConnectButton;
 
@@ -68,9 +72,63 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.sendBtn)
     void sendToServer() {
         if (mConnection.isConnected()) {
-            mConnection.sendPacket(HELLO_WORLD);
+            mConnection.sendData(buildSentData());
         }
     }
+
+    private NetworkConnection.ConnectionListener mConnectionListener =
+            new NetworkConnection.ConnectionListener() {
+                @Override
+                public void onConnected(boolean isConnected) {
+                    Log.d(TAG, "onConnected " + isConnected);
+                    updateConnectStatusView(isConnected);
+                }
+
+                @Override
+                public void onDataReceived(String data) {
+
+                }
+
+                @Override
+                public void onDataSent(String data, boolean succeeded) {
+                    updateLogView(true, data);
+                }
+            };
+
+
+    private void updateConnectStatusView(boolean isConnected) {
+        GradientDrawable bgShape = (GradientDrawable)mConnectStatusView.getBackground();
+        int colorResId = isConnected ? android.R.color.holo_green_dark : android.R.color.holo_red_dark;
+        bgShape.setColor(ContextCompat.getColor(this, colorResId));
+
+        mConnectButton.setText(isConnected ? "Disconnect" : "Connect");
+    }
+
+    private void updateLogView(boolean isSent, String log) {
+        String prefix = isSent ? " <    " : " >    ";
+        String suffix = "\n";
+        mLogView.append(prefix + log + suffix);
+    }
+
+    private String buildSentData() {
+        String text = mSendEditText.getText().toString();
+        if (text == null || text.isEmpty()) {
+            text = HELLO_WORLD;
+        }
+
+        text += buildCurrentTimeStamp();
+        return text;
+    }
+
+    private String buildCurrentTimeStamp() {
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        return "@" + sdf.format(new Date());
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    //              Deprecated Method                                        //
+    ///////////////////////////////////////////////////////////////////////////
 
     /**
      * 最开始的做法：每次调用 send，建立 socket 连接，然后发送。
@@ -98,31 +156,4 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "Failed to open socket, exception: " + e);
         }
     }
-
-    void updateConnectStatusView(boolean isConnected) {
-        GradientDrawable bgShape = (GradientDrawable)mConnectStatusView.getBackground();
-        int colorResId = isConnected ? android.R.color.holo_green_dark : android.R.color.holo_red_dark;
-        bgShape.setColor(ContextCompat.getColor(this, colorResId));
-
-        mConnectButton.setText(isConnected ? "Disconnect" : "Connect");
-    }
-
-    private NetworkConnection.ConnectionListener mConnectionListener =
-            new NetworkConnection.ConnectionListener() {
-        @Override
-        public void onConnected(boolean isConnected) {
-            Log.d(TAG, "onConnected " + isConnected);
-            updateConnectStatusView(isConnected);
-        }
-
-        @Override
-        public void onDataReceived(String data) {
-
-        }
-
-        @Override
-        public void onDataSent(boolean succeeded) {
-
-        }
-    };
 }

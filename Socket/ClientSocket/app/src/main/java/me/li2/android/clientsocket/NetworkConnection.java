@@ -6,7 +6,6 @@ import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -42,7 +41,7 @@ public class NetworkConnection {
     public interface ConnectionListener {
         void onConnected(final boolean isConnected);
         void onDataReceived(final String data);
-        void onDataSent(final boolean succeeded);
+        void onDataSent(final String data, final boolean succeeded);
     }
 
     public NetworkConnection(Context context, final ConnectionListener listener) {
@@ -65,7 +64,7 @@ public class NetworkConnection {
      * @param serverPort the server port
      */
     public void connect(final String serverIp, final int serverPort) {
-        if (!isNetworkAvailable()) {
+        if (!isAvailable()) {
             notifyConnected(false);
             return;
         }
@@ -146,7 +145,7 @@ public class NetworkConnection {
             try {
                 mClientSocket.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG, "close socket exception: " + e.getMessage());
             }
         }
     }
@@ -162,17 +161,16 @@ public class NetworkConnection {
                 mDataOutputStream = null;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "close streams exception: " + e.getMessage());
         }
     }
 
-    private boolean isNetworkAvailable() {
+    private boolean isAvailable() {
         ConnectivityManager manager = (ConnectivityManager) mContext.getApplicationContext()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
 
         if (networkInfo != null && networkInfo.isConnected() && networkInfo.isAvailable()) {
-            Log.i(TAG, "Network is available.");
             return true;
         } else {
             Log.e(TAG, "Network is not available!");
@@ -182,18 +180,21 @@ public class NetworkConnection {
 
     /**
      * Send packet to server
-     * @param packet the packet to be sent
+     * @param data the packet to be sent
      */
-    public void sendPacket(final String packet) {
+    public void sendData(final String data) {
         mSendHandler.post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(mContext, "send to server", Toast.LENGTH_LONG).show();
                 try {
-                    mDataOutputStream.writeUTF(packet);
+                    mDataOutputStream.writeUTF(data);
                     mDataOutputStream.flush();
+                    notifyDataSent(data, true);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    // TODO 如果 Server 端 read exception 被当做是 disconnect，
+                    // 那么 client 端 write exception 呢？ （read reception 时也做了重连动作，但 write 没有处理！）
+                    Log.e(TAG, "Write data exception: " + e.getMessage());
+                    notifyDataSent(data, false);
                 }
             }
         });
@@ -207,6 +208,17 @@ public class NetworkConnection {
             public void run() {
                 if (mConnectionListener != null) {
                     mConnectionListener.onConnected(isConnected);
+                }
+            }
+        });
+    }
+
+    private void notifyDataSent(final String data, final boolean succeeded) {
+        mUIHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mConnectionListener != null) {
+                    mConnectionListener.onDataSent(data, succeeded);
                 }
             }
         });
