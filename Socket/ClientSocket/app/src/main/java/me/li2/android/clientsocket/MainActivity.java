@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         if (mConnection != null)
         {
-            mConnection.disconnect();
+            mConnection.disconnect("MainActivity.onDestroy");
         }
     }
 
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
             int port = Integer.valueOf(mPortEditText.getText().toString());
             mConnection.connect(ip, port);
         } else {
-            mConnection.disconnect();
+            mConnection.disconnect("User intent to disconnect");
         }
     }
 
@@ -79,19 +79,23 @@ public class MainActivity extends AppCompatActivity {
     private NetworkConnection.ConnectionListener mConnectionListener =
             new NetworkConnection.ConnectionListener() {
                 @Override
-                public void onConnected(boolean isConnected) {
+                public void onConnected(boolean isConnected, String disconnectReason) {
                     Log.d(TAG, "onConnected " + isConnected);
                     updateConnectStatusView(isConnected);
+                    if (!isConnected) {
+                        updateLogView(LogType.APP, disconnectReason);
+                    }
                 }
 
                 @Override
                 public void onDataReceived(String data) {
-
+                    Log.d(TAG, "onDataReceived " + data);
+                    updateLogView(LogType.DATA_IN, data);
                 }
 
                 @Override
                 public void onDataSent(String data, boolean succeeded) {
-                    updateLogView(true, data);
+                    updateLogView(LogType.DATA_OUT, data);
                 }
             };
 
@@ -104,8 +108,25 @@ public class MainActivity extends AppCompatActivity {
         mConnectButton.setText(isConnected ? "Disconnect" : "Connect");
     }
 
-    private void updateLogView(boolean isSent, String log) {
-        String prefix = isSent ? " <    " : " >    ";
+    private enum LogType {
+        DATA_IN,
+        DATA_OUT,
+        APP,
+    }
+
+    private void updateLogView(LogType type, String log) {
+        String prefix;
+        switch (type) {
+            case DATA_IN:
+                prefix = " >    ";
+                break;
+            case DATA_OUT:
+                prefix = " <    ";
+                break;
+            default:
+                prefix = " |    ";
+                break;
+        }
         String suffix = "\n";
         mLogView.append(prefix + log + suffix);
     }

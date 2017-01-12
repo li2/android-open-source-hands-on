@@ -25,21 +25,19 @@ import java.net.Socket;
 
 public class NetworkConnection {
     private static final String TAG = "NetworkConnection";
-    private static final String SERVER_IP = "";
-    private static final int SERVER_PORT = 8080;
 
     private Context mContext;
     private Handler mUIHandler;
     private Socket mClientSocket;
     private DataInputStream mDataInputStream;
     private DataOutputStream mDataOutputStream;
-    private Thread mConnectionThread;
+    private Thread mConnectThread;
     private Handler mSendHandler;
     private boolean mIsConnected;
     private ConnectionListener mConnectionListener;
 
     public interface ConnectionListener {
-        void onConnected(final boolean isConnected);
+        void onConnected(final boolean isConnected, final String disconnectReason);
         void onDataReceived(final String data);
         void onDataSent(final String data, final boolean succeeded);
     }
@@ -65,49 +63,54 @@ public class NetworkConnection {
      */
     public void connect(final String serverIp, final int serverPort) {
         if (!isAvailable()) {
-            notifyConnected(false);
+            notifyConnected(false, "Network unavailable");
             return;
         }
 
-        if (mConnectionThread == null) {
-            mConnectionThread = new Thread(new Runnable() {
+        if (mConnectThread == null) {
+            mConnectThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     if (!openSocket(serverIp, serverPort)) {
-                        notifyConnected(false);
+                        notifyConnected(false, "Open server socket failed");
+                        // 也要在这里置空，否则第一次打开失败后，第二次打开就不会执行这段代码
+                        mConnectThread = null;
                         return;
                     }
-                    notifyConnected(true);
-                    mConnectionThread = null;
+                    notifyConnected(true, "");
+                    mConnectThread = null;
+                    startReceiveThread();
                 }
             });
-            mConnectionThread.setName("NetworkConnectThread");
-            mConnectionThread.start();
+            mConnectThread.setName("NetworkConnectThread");
+            mConnectThread.start();
         }
     }
 
     /**
      * Disconnect to server
      */
-    public void disconnect() {
-        if (mConnectionThread != null) {
+    public void disconnect(final String disconnectReason) {
+        Log.d(TAG, "disconnect: " + disconnectReason);
+        if (mConnectThread != null) {
             try {
-                mConnectionThread.join();
+                mConnectThread.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
 
-        mConnectionThread = new Thread(new Runnable() {
+        mConnectThread = new Thread(new Runnable() {
             @Override
             public void run() {
+                stopReceiveThread();
                 closeSocket();
-                notifyConnected(false);
-                mConnectionThread = null;
+                notifyConnected(false, disconnectReason);
+                mConnectThread = null;
             }
         });
-        mConnectionThread.setName("NetworkDisconnectThread");
-        mConnectionThread.start();
+        mConnectThread.setName("NetworkDisconnectThread");
+        mConnectThread.start();
     }
 
     public boolean isConnected() {
@@ -116,11 +119,12 @@ public class NetworkConnection {
 
     private boolean openSocket(String serverIp, int serverPort) {
         if (mClientSocket != null && mDataInputStream != null && mDataOutputStream != null) {
+            Log.d(TAG, "Server already connected");
             return true;
         }
 
         try {
-            Log.d(TAG, "open socket " + serverIp + ":" + serverPort);
+            Log.d(TAG, "Open socket " + serverIp + ":" + serverPort);
             mClientSocket = new Socket(serverIp, serverPort);
             mClientSocket.setKeepAlive(true);
             mDataInputStream = new DataInputStream(mClientSocket.getInputStream());
@@ -133,12 +137,12 @@ public class NetworkConnection {
             // client ip: 192.168.15.169
             return false;
         }
-
-        Log.i(TAG, "Succeed to connect to server: " + SERVER_IP + ":" + SERVER_PORT);
+        Log.d(TAG, "Succeed to connect server");
         return true;
     }
 
     private void closeSocket() {
+        Log.d(TAG, "closeSocket");
         closeStreams();
 
         if (mClientSocket != null) {
@@ -151,6 +155,7 @@ public class NetworkConnection {
     }
 
     private void closeStreams() {
+        Log.d(TAG, "closeStreams");
         try {
             if (mDataInputStream != null) {
                 mDataInputStream.close();
@@ -191,8 +196,6 @@ public class NetworkConnection {
                     mDataOutputStream.flush();
                     notifyDataSent(data, true);
                 } catch (IOException e) {
-                    // TODO 如果 Server 端 read exception 被当做是 disconnect，
-                    // 那么 client 端 write exception 呢？ （read reception 时也做了重连动作，但 write 没有处理！）
                     Log.e(TAG, "Write data exception: " + e.getMessage());
                     notifyDataSent(data, false);
                 }
@@ -200,14 +203,70 @@ public class NetworkConnection {
         });
     }
 
-    private void notifyConnected(final boolean isConnected) {
+
+    // ------------------------ Receive Thread --------------------------------
+
+    /**
+     * A boolean flag to mark the receive thread is interrupted or not.
+     * 连接一旦中断，必须终止 receive thread，这个 flag 就是用来退出 while loop，
+     * 对 disconnect 清理工作很重要，如果仅用 isConnected 做判断，很容易因为清理的顺序导致无法退出线程。
+     */
+    private boolean mReceiveThreadInterrupted = false;
+    private Thread mReceiveThread;
+
+    private void startReceiveThread() {
+        if (mReceiveThread != null) {
+            Log.d(TAG, "Receive thread already start");
+            return;
+        }
+        if (mDataOutputStream == null) {
+            Log.d(TAG, "mDataOutputStream not opened");
+            return;
+        }
+
+        mReceiveThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "Receive thread is running");
+                try {
+                    while (isConnected() && !mReceiveThreadInterrupted) {
+                        String data = mDataInputStream.readUTF();
+                        notifyDataReceived(data);
+                    }
+                } catch (IOException e) {
+                    // read 是阻塞操作，一旦与 Server 失去连接，read exception 就会被抛出，所以，
+                    // 可以仅在 read 线程判断 disconnect，把 write exception 当做普通异常处理。
+                    Log.e(TAG, "Read data exception: " + e.getMessage());
+                    disconnect("Read exception then disconnect");
+                }
+            }
+        });
+        mReceiveThreadInterrupted = false;
+        mReceiveThread.setName("ReceiveThread");
+        mReceiveThread.start();
+    }
+
+    private void stopReceiveThread() {
+        Log.d(TAG, "stopReceiveThread");
+        if (mReceiveThread != null) {
+            try {
+                mReceiveThreadInterrupted = true;
+                //mReceiveThread.join();
+            } catch (Exception e) {
+                Log.e(TAG, "Stop received thread exception: " + e.getMessage());
+            }
+            mReceiveThread = null;
+        }
+    }
+
+    private void notifyConnected(final boolean isConnected, final String disconnectReason) {
         mIsConnected = isConnected;
         // make callback run on UI thread
         mUIHandler.post(new Runnable() {
             @Override
             public void run() {
                 if (mConnectionListener != null) {
-                    mConnectionListener.onConnected(isConnected);
+                    mConnectionListener.onConnected(isConnected, disconnectReason);
                 }
             }
         });
@@ -219,6 +278,17 @@ public class NetworkConnection {
             public void run() {
                 if (mConnectionListener != null) {
                     mConnectionListener.onDataSent(data, succeeded);
+                }
+            }
+        });
+    }
+
+    private void notifyDataReceived(final String data) {
+        mUIHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mConnectionListener != null) {
+                    mConnectionListener.onDataReceived(data);
                 }
             }
         });

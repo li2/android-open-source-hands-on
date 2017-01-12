@@ -1,6 +1,7 @@
 package me.li2;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -76,6 +77,7 @@ public class Server
       private boolean mIsConnected; 
       private Socket mSocket;
       private DataInputStream mDataInputStream;
+      private DataOutputStream mDataOutputStream;
       private String mClientIp;
       
       public ClientSocketHandler(Socket socket)
@@ -88,6 +90,7 @@ public class Server
         
         try {
           mDataInputStream = new DataInputStream(mSocket.getInputStream());
+          mDataOutputStream = new DataOutputStream(mSocket.getOutputStream());
         } catch (IOException e) {
           System.out.println("Error opening DataInputStream");
           e.printStackTrace();
@@ -99,16 +102,34 @@ public class Server
       {
         while (mIsConnected) {
           try {
-            System.out.println("Receiving from client " + mClientIp + ":  " + mDataInputStream.readUTF());
+            String data = mDataInputStream.readUTF();
+            System.out.println("Receiving from client " + mClientIp + ":  " + data);
+            sendResponse(data);
           } catch (IOException e) {
             // we have to close stream and socket when disconnect.
             // and the right way to detect disconnect is the IOException.
             // refer to http://stackoverflow.com/a/10241044/2722270
-            System.out.println("Error reading packet, close socket");
+            System.out.println("Error reading data, close socket");
             disconnect();
           }
         }
         System.out.println(mClientIp + " disconnect");
+      }
+
+      private void sendResponse(final String data)
+      {
+        sendData("Succeed to receive: " + data);
+      }
+      
+      private void sendData(final String data)
+      {
+        try {
+          System.out.println("Sending   to   client " + mClientIp + ":  " + data);
+          mDataOutputStream.writeUTF(data);
+          mDataOutputStream.flush();
+        } catch (IOException e) {
+          System.out.println("Error writing data, close socket");
+        }
       }
       
       private void disconnect()
