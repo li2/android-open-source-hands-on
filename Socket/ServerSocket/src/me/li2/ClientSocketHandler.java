@@ -3,11 +3,7 @@ package me.li2;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 
 /**
@@ -20,14 +16,21 @@ public class ClientSocketHandler implements Runnable
   private DataInputStream  mDataInputStream;
   private DataOutputStream mDataOutputStream;
   private String           mClientIp;
-
-  public ClientSocketHandler(Socket socket)
+  private OnClientActionListener mOnClientActionListener;
+  
+  public interface OnClientActionListener {
+    void onReceived(final String clientIp, final String data);
+    void onDisconnect(final String clientIp);
+  }
+  
+  public ClientSocketHandler(Socket socket, OnClientActionListener listener)
   {
     super();
     assert(socket != null);
     mIsConnected = true;
     mSocket = socket;
     mClientIp = mSocket.getRemoteSocketAddress().toString();
+    mOnClientActionListener = listener;
 
     try
     {
@@ -49,7 +52,10 @@ public class ClientSocketHandler implements Runnable
       {
         String data = mDataInputStream.readUTF();
         System.out.println("Receiving from client " + mClientIp + ":  " + data);
-        sendResponse(data);
+        if (mOnClientActionListener != null)
+        {
+          mOnClientActionListener.onReceived(mClientIp, data);
+        }
       } catch (IOException e)
       {
         // we have to close stream and socket when disconnect.
@@ -61,17 +67,12 @@ public class ClientSocketHandler implements Runnable
     }
     System.out.println(mClientIp + " disconnect");
   }
-
-  private void sendResponse(final String data)
-  {
-    sendData("Succeed to receive: " + data);
-  }
-
-  private void sendData(final String data)
+  
+  public void sendData(final String data)
   {
     try
     {
-      System.out.println("Sending   to   client " + mClientIp + ":  " + data);
+      System.out.println("Sending to client " + mClientIp + ":  " + data);
       mDataOutputStream.writeUTF(data);
       mDataOutputStream.flush();
     } catch (IOException e)
@@ -80,6 +81,11 @@ public class ClientSocketHandler implements Runnable
     }
   }
 
+  public String getIp()
+  {
+    return mClientIp;
+  }
+  
   private void disconnect()
   {
     mIsConnected = false;
@@ -105,6 +111,11 @@ public class ClientSocketHandler implements Runnable
     } catch (IOException e)
     {
       System.out.println("Error closing Socket");
+    }
+    
+    if (mOnClientActionListener != null)
+    {
+      mOnClientActionListener.onDisconnect(mClientIp);
     }
   }
 }
