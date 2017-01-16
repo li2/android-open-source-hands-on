@@ -31,7 +31,6 @@ public class NetworkConnection {
     private Socket mClientSocket;
     private DataInputStream mDataInputStream;
     private DataOutputStream mDataOutputStream;
-    private Thread mConnectThread;
     private Handler mSendHandler;
     private boolean mIsConnected;
     private ConnectionListener mConnectionListener;
@@ -56,6 +55,7 @@ public class NetworkConnection {
         mUIHandler = new Handler(mContext.getMainLooper());
     }
 
+    private Thread mConnectThread;
     /**
      * Connect to socket
      * @param serverIp the server ip
@@ -87,6 +87,7 @@ public class NetworkConnection {
         }
     }
 
+    private Thread mDisConnectThread;
     /**
      * Disconnect to server
      */
@@ -100,17 +101,22 @@ public class NetworkConnection {
             }
         }
 
-        mConnectThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                stopReceiveThread();
-                closeSocket();
-                notifyConnected(false, disconnectReason);
-                mConnectThread = null;
-            }
-        });
-        mConnectThread.setName("NetworkDisconnectThread");
-        mConnectThread.start();
+        if (mDisConnectThread == null) {
+            mDisConnectThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    closeSocket();
+//                    stopReceiveThread();
+                    notifyConnected(false, disconnectReason);
+                    mDisConnectThread = null;
+                    Log.d(TAG, "disconnect succeed");
+                }
+            });
+            mDisConnectThread.setName("NetworkDisConnectThread");
+            mDisConnectThread.start();
+        } else {
+            Log.d(TAG, "already in disconnect operation");
+        }
     }
 
     public boolean isConnected() {
@@ -237,6 +243,7 @@ public class NetworkConnection {
                     // read 是阻塞操作，一旦与 Server 失去连接，read exception 就会被抛出，所以，
                     // 可以仅在 read 线程判断 disconnect，把 write exception 当做普通异常处理。
                     Log.e(TAG, "Read data exception: " + e.getMessage());
+                    mReceiveThread = null;
                     disconnect("Read exception then disconnect");
                 }
             }
@@ -246,13 +253,21 @@ public class NetworkConnection {
         mReceiveThread.start();
     }
 
+    // Socket should be closed firstly, to make any threads blocked in socket stream operations to be unblocked.
+    // Otherwise, ReceiveThread.join() will block the current thread, and the disconnect operation will be blocked.
+    // http://stackoverflow.com/a/4426050/2722270
+    // http://stackoverflow.com/a/1024501/2722270
+    //
+    // however, if close socket firstly, the receive thread will be interrupted by io exception, and
+    // the method stopReceiveThread become to be useless.
+
     private void stopReceiveThread() {
         Log.d(TAG, "stopReceiveThread");
         if (mReceiveThread != null) {
             try {
                 mReceiveThreadInterrupted = true;
-                //mReceiveThread.join();
-            } catch (Exception e) {
+                mReceiveThread.join();
+            } catch (InterruptedException e) {
                 Log.e(TAG, "Stop received thread exception: " + e.getMessage());
             }
             mReceiveThread = null;
@@ -260,6 +275,7 @@ public class NetworkConnection {
     }
 
     private void notifyConnected(final boolean isConnected, final String disconnectReason) {
+        Log.d(TAG, "notifyConnected " + isConnected + ", " + disconnectReason);
         mIsConnected = isConnected;
         // make callback run on UI thread
         mUIHandler.post(new Runnable() {
